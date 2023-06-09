@@ -1,0 +1,55 @@
+<div class="article-page">
+  <div class="banner">
+    <div class="container">
+      <h1><%= @article.title %></h1>
+      <.actions
+        article={@article}
+        edit_path={Routes.editor_index_path(@socket, :edit, @article.slug)}
+        profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+        is_owner={@is_owner}
+        is_following={!is_nil(@following)}
+        is_favorited={!is_nil(@favorite)}
+      />
+    </div>
+  </div>
+
+  <div class="container page">
+    <div class="row article-content">
+      <div class="col-md-12">
+        <article><%= raw(@article.body) %></article>
+        <ul class="tag-list">
+          <%= for tag <- @article.tags do %>
+            <li class="tag-default tag-pill tag-outline">
+              <%= tag.name %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="article-actions">
+      <.actions
+        article={@article}
+        edit_path={Routes.editor_index_path(@socket, :edit, @article.slug)}
+        profile_path={Routes.profile_index_path(@socket, :profile, @article.user.username)}
+        is_owner={@is_owner}
+        is_following={!is_nil(@following)}
+        is_favorited={!is_nil(@favorite)}
+      />
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-md-8 offset-md-2">
+        <.live_component
+          module={RealworldWeb.ArticleLive.CommentsComponent}
+          id="comments"
+          current_user={assigns[:current_user]}
+          comments={@article.comments}
+          article_id={@article.id}
+        />
+      </div>
+    </div>
+  </div>
+</div>

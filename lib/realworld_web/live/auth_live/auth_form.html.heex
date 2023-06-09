@@ -1,0 +1,43 @@
+<div>
+  <ul class="error-messages">
+    <%= if @form.errors do %>
+      <%= for {k, v} <- @errors do %>
+        <li>
+          <%= humanize("#{k} #{v}") %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+  <.form
+    :let={f}
+    for={@form}
+    phx-change="validate"
+    phx-submit="submit"
+    phx-trigger-action={@trigger_action}
+    phx-target={@myself}
+    action={@action}
+    method="POST"
+  >
+    <%= if @live_action in [:register] do %>
+      <fieldset class="form-group">
+        <%= text_input(f, :username,
+          class: "form-control form-control-lg",
+          placeholder: "Your Name"
+        ) %>
+      </fieldset>
+    <% end %>
+    <fieldset class="form-group">
+      <%= text_input(f, :email,
+        class: "form-control form-control-lg",
+        placeholder: "Email"
+      ) %>
+    </fieldset>
+    <fieldset class="form-group">
+      <%= password_input(f, :password,
+        class: "form-control form-control-lg",
+        placeholder: "Password"
+      ) %>
+    </fieldset>
+    <%= submit(@cta, class: "btn btn-lg btn-primary pull-xs-right") %>
+  </.form>
+</div>

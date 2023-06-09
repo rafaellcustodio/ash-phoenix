@@ -1,0 +1,79 @@
+<div class="home-page">
+  <%= if !assigns[:current_user] do %>
+    <div class="banner">
+      <div class="container">
+        <h1 class="logo-font">conduit</h1>
+        <p>A place to share your knowledge.</p>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="feed-toggle">
+          <ul class="nav nav-pills outline-active">
+            <%= if assigns[:current_user] do %>
+              <li class="nav-item">
+                <span
+                  role="button"
+                  class={"nav-link #{active_class(:private_feed, @active_view)}"}
+                  phx-click="private-feed"
+                >
+                  Your Feed
+                </span>
+              </li>
+            <% end %>
+            <li class="nav-item">
+              <span
+                role="button"
+                class={"nav-link #{active_class(:global_feed, @active_view)}"}
+                phx-click="global-feed"
+              >
+                Global Feed
+              </span>
+            </li>
+            <%= if @active_view == :tag_feed do %>
+              <li class="nav-item">
+                <span role="button" class={"nav-link #{active_class(:tag_feed, @active_view)}"}>
+                  <%= @filter_tag %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <%= for article <- @articles do %>
+          <.live_component
+            module={RealworldWeb.PageLive.ArticleComponent}
+            id={article.id}
+            article={article}
+          />
+        <% end %>
+      </div>
+
+      <div class="col-md-3">
+        <div class="sidebar">
+          <p>Popular Tags</p>
+
+          <div class="tag-list">
+            <%= for tag <- @tags do %>
+              <.link patch={"?tag=#{tag.name}"} class="tag-pill tag-default">
+                <%= tag.name %>
+              </.link>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%= if @pages > 1 do %>
+        <.live_component
+          module={RealworldWeb.PageLive.PaginationComponent}
+          id="pagination-component"
+          pages={@pages}
+          active_page={@active_page}
+        />
+      <% end %>
+    </div>
+  </div>
+</div>

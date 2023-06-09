@@ -1,0 +1,43 @@
+<div class="article-preview">
+  <div class="article-meta">
+    <a href={"/profile/#{@article.user.username}"}>
+      <img src={@article.user.image} />
+    </a>
+    <div class="info">
+      <a href={"/profile/#{@article.user.username}"} class="author">
+        <%= @article.user.username %>
+      </a>
+      <span class="date"><%= format_datetime(@article.created_at) %></span>
+    </div>
+    <button
+      :if={!@article.is_favorited}
+      class="btn btn-sm btn-outline-primary pull-xs-right"
+      phx-click="favorite-article"
+      phx-value-article_id={@article.id}
+    >
+      <i class="ion-heart"></i>
+      <span class="counter"><%= @article.favorites_count %></span>
+    </button>
+    <button
+      :if={@article.is_favorited}
+      class="btn btn-sm btn-primary pull-xs-right"
+      phx-click="unfavorite-article"
+      phx-value-article_id={@article.id}
+    >
+      <i class="ion-heart"></i>
+      <span class="counter"><%= @article.favorites_count %></span>
+    </button>
+  </div>
+  <a href={"/article/#{@article.slug}"} class="preview-link">
+    <h1><%= @article.title %></h1>
+    <p><%= @article.description %></p>
+    <span phx-click="read-more" phx-value-slug={@article.slug} phx-target={@myself}>
+      Read more...
+    </span>
+    <ul class="tag-list">
+      <%= for tag <- @article.tags do %>
+        <li class="tag-default tag-pill tag-outline"><%= tag.name %></li>
+      <% end %>
+    </ul>
+  </a>
+</div>
